@@ -2,9 +2,32 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Button, IconButton, Modal } from "@mui/material";
 import { Box } from "@mui/system";
 import { useState } from "react";
-
-function CreateNewDoc() {
+import { db } from "../firebaseConfig";
+import { getDoc, getFirestore, query } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  serverTimestamp,
+  collection,
+  getDocs,
+  addDoc,
+} from "firebase/firestore";
+import { useEffect } from "react";
+function CreateNewDoc({ session }) {
   const [open, setOpen] = useState(false);
+  const [input, setInput] = useState("");
+
+  const createDoc = () => {
+    if (!input) return;
+    addDoc(collection(db, "userDocs", session.user.email, "docs"), {
+      filename: input,
+      timestamp: serverTimestamp(),
+    });
+
+    setInput(input);
+    setOpen(false);
+  };
+
   return (
     <div className="mx-auto max-w-4xl  ">
       <div className="pt-5">
@@ -55,13 +78,13 @@ function CreateNewDoc() {
                     width: "100%",
                     outline: "none",
                   }}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && createDoc()}
                 />
               </div>
               <div className="flex justify-between p-2 mt-2">
                 <Button onClick={() => setOpen(false)}>Cancel</Button>
-                <Button onClick={() => alert("Create was clicked")}>
-                  Create
-                </Button>
+                <Button onClick={createDoc}>Create</Button>
               </div>
             </div>
           </Box>

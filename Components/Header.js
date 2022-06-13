@@ -6,7 +6,7 @@ import AppsRoundedIcon from "@mui/icons-material/AppsRounded";
 import { getSession, signOut } from "next-auth/react";
 function Header({ session }) {
   return (
-    <div className="flex items-center justify-between ">
+    <div className="flex items-center justify-between sticky ">
       <div className="flex">
         <div>
           <IconButton size="large">
